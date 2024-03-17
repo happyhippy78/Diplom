@@ -1,0 +1,99 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <title>Бюджетное приложение</title>
+</head>
+<body>
+    <nav>
+        <div class="nav-wrapper">
+            <a href='{% url "index" %}' class='brand-logo center'>Привет, {{ user }}</a>
+            <ul class="right">
+                <li><a href='{% url "logout" %}' class='btn'>Выйти</a></li>
+            </ul>
+        </div>
+    </nav>
+    <br>
+    <div class="section">
+        <div class="row">
+            <form class="col s12" action='{% url "add item" %}' method='post'>
+                {% csrf_token %}
+                <div class="row">
+                    <div class="container center">
+                        <h3 class='center'>Ваш общий бюджет: <span style="color:green;">{{budget}}</span> рублей</h3>
+                        <h3 clas='center'>Вы потратили в сумме : <span style="color:red;">{{expenses}}</span> рублей</h3>
+                        <br>
+                        <br>
+                        <div class="input-field col s3">
+                            <input placeholder="Название расходов" name="expense_name" id='expense_name' type='text' class='validate'>
+                            <label for='expense_name'>Название расходов</label>
+                        </div>
+                        <div class="input-field col s3">
+                            <input placeholder='Общая сумма' name='cost' id='cost' type='text' class='validate'>
+                            <label for='cost'>Общая сумма</label>
+                        </div>
+                        <div class="input-field col s3">
+                            <input placeholder='Дата осуществления расхода' name="expense_date" id="expense_date" type="text" class='datepicker'>
+                            <label for="expense_date">Дата осуществления расхода</label>
+                        </div>
+                        <button class="btn waves-effect waves-light" type="submit" name="action">Добавить расходы
+                            <i class="material-icons right">add_circle</i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="row">
+            <div class="container">
+                <div class="col s6">
+                    <table class="striped centered responsive-table">
+                        <thead>
+                            <tr>
+                                <th>Статья расхода</th>
+                                <th>Общая сумма</th>
+                                <th>Дата</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for expense_item in expense_items %}
+                            <tr>
+                                <td>{{ expense_item.expense_name }}</td>
+                                <td>{{ expense_item.cost }}</td>
+                                <td>{{ expense_item.date_added}}</td>
+                                <td></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col s6">
+                    <img class='responsive-img' src= "{% static 'appAccounting/expense.jpg' %}">
+                </div>
+            </div>
+    </div>
+
+        
+    </div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.datepicker');
+            var instances = M.Datepicker.init(elems, {format:'dd-mm-yyyy'});
+        });
+    </script>
+</body>
+</html>
